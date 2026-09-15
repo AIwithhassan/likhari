@@ -1,0 +1,475 @@
+@import "tailwindcss";
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  /* Palette: swap these three to retheme the whole site. */
+  --accent: #d6ff00;
+  --accent-soft: #74f19a;
+  --accent-rgb: 214, 255, 0;
+
+  --bg: #000000;
+  --bg-elev: rgba(255, 255, 255, 0.03);
+  --bg-elev-hover: rgba(255, 255, 255, 0.05);
+  --fg: #ffffff;
+  --fg-muted: rgba(255, 255, 255, 0.6);
+  --fg-dim: rgba(255, 255, 255, 0.4);
+  --border: rgba(255, 255, 255, 0.1);
+  --panel: rgba(0, 0, 0, 0.7);
+  --sheen: rgba(255, 255, 255, 0.08);
+  --on-accent: #050505;
+  /* Logo badge is deliberately monochrome, not palette-tinted. */
+  --logo-bg: #ffffff;
+  --logo-fg: #050505;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --accent: #5b7f00;
+  --accent-soft: #1f8a4c;
+  --accent-rgb: 91, 127, 0;
+
+  --bg: #f7f7f4;
+  --bg-elev: rgba(0, 0, 0, 0.025);
+  --bg-elev-hover: rgba(0, 0, 0, 0.045);
+  --fg: #0b0b0b;
+  --fg-muted: rgba(0, 0, 0, 0.62);
+  --fg-dim: rgba(0, 0, 0, 0.42);
+  --border: rgba(0, 0, 0, 0.12);
+  --panel: rgba(255, 255, 255, 0.85);
+  --sheen: rgba(0, 0, 0, 0.05);
+  --on-accent: #ffffff;
+  --logo-bg: #050505;
+  --logo-fg: #ffffff;
+}
+
+/* Alternate palettes — set data-palette on <html>. */
+[data-palette="cyan"] {
+  --accent: #22d3ee;
+  --accent-soft: #38bdf8;
+  --accent-rgb: 34, 211, 238;
+}
+[data-palette="cyan"][data-theme="light"] {
+  --accent: #0e7490;
+  --accent-rgb: 14, 116, 144;
+}
+
+[data-palette="violet"] {
+  --accent: #a78bfa;
+  --accent-soft: #f0abfc;
+  --accent-rgb: 167, 139, 250;
+}
+[data-palette="violet"][data-theme="light"] {
+  --accent: #6d28d9;
+  --accent-rgb: 109, 40, 217;
+}
+
+[data-palette="amber"] {
+  --accent: #fbbf24;
+  --accent-soft: #fb923c;
+  --accent-rgb: 251, 191, 36;
+}
+[data-palette="amber"][data-theme="light"] {
+  --accent: #b45309;
+  --accent-rgb: 180, 83, 9;
+}
+
+[data-palette="rose"] {
+  --accent: #fb7185;
+  --accent-soft: #f472b6;
+  --accent-rgb: 251, 113, 133;
+}
+[data-palette="rose"][data-theme="light"] {
+  --accent: #be123c;
+  --accent-rgb: 190, 18, 60;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  color: #fff;
+  background: rgba(var(--accent-rgb), 0.32);
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Faint grid wash over the hero, fading out toward the fold. */
+.noise-overlay {
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 0);
+  background-size: 42px 42px;
+  -webkit-mask-image: linear-gradient(#000, transparent 88%);
+  mask-image: linear-gradient(#000, transparent 88%);
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spinBorder {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Primary CTA: conic ring that spins around a near-black pill. */
+.hero-primary-btn {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  background: var(--btn-bg, #050505);
+  border: none;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 rgba(116, 241, 154, 0);
+}
+
+.hero-primary-btn::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 70%,
+    var(--accent) 85%,
+    var(--accent-soft) 95%,
+    var(--accent) 100%
+  );
+  animation: spinBorder 2s linear infinite;
+}
+
+.hero-primary-btn::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--btn-face, linear-gradient(135deg, #0a0a0a, #000));
+}
+
+.hero-primary-glow {
+  position: absolute;
+  inset: -20px;
+  z-index: -3;
+  pointer-events: none;
+  opacity: 0;
+  filter: blur(20px);
+  transition: opacity 0.5s;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(var(--accent-rgb), 0.35),
+    transparent 70%
+  );
+}
+
+.hero-primary-btn:hover {
+  color: var(--accent);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 30px rgba(var(--accent-rgb), 0.2);
+}
+
+.hero-primary-btn:hover .hero-primary-glow {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-primary-btn::before {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Waveform bars: CSS-owned so SSR and client markup stay identical. */
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.45); opacity: 0.55; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+.wave-bar {
+  transform-origin: bottom;
+  animation: waveBar 1.1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-bar { animation: none; }
+}
+
+/* ---- Card treatment: rotating border, sweeping glare, film grain ---- */
+
+/* Conic gradient masked to a 1.5px ring; fades in on hover. */
+.premium-card-border {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1.5px;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+  mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  mask-clip: content-box, border-box;
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.premium-card-border::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    transparent 60%,
+    rgba(var(--accent-rgb), 0.45) 75%,
+    var(--accent-soft) 85%,
+    var(--accent) 95%,
+    rgba(var(--accent-rgb), 0.45) 100%
+  );
+  animation: borderRotate 4s linear infinite;
+}
+
+@keyframes borderRotate {
+  0% { transform: rotate(0); }
+  to { transform: rotate(1turn); }
+}
+
+.group:hover .premium-card-border,
+.premium-card-border.show-border {
+  opacity: 1;
+}
+
+/* Skewed light band that sweeps across on hover. */
+.glass-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    135deg,
+    transparent,
+    var(--sheen) 40%,
+    var(--sheen) 50%,
+    var(--sheen) 60%,
+    transparent
+  );
+  transform: translateX(-100%) skew(-25deg);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .glass-sheen {
+  transform: translateX(250%) skew(-25deg);
+}
+
+/* Fine fractal noise so the glass reads as a surface, not flat fill. */
+.agency-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-card-border::before { animation: none; }
+  .glass-sheen { transition: none; }
+}
+
+/* Nastaliq needs extra line box to avoid clipping its descenders. */
+.urdu {
+  font-family: var(--font-urdu), serif;
+  line-height: 2;
+}
+
+/* Hero overlays: each theme fades the birds into its own ground colour. */
+.hero-wash {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55),
+    rgba(0, 0, 0, 0.92) 74%,
+    var(--bg)
+  );
+}
+
+[data-theme="light"] .hero-wash {
+  background: linear-gradient(
+    180deg,
+    rgba(247, 247, 244, 0.55),
+    rgba(247, 247, 244, 0.9) 74%,
+    var(--bg)
+  );
+}
+
+.hero-tint {
+  background: radial-gradient(
+      ellipse at 20% 20%,
+      rgba(var(--accent-rgb), 0.07),
+      transparent 45%
+    ),
+    radial-gradient(ellipse at 80% 15%, rgba(var(--accent-rgb), 0.05), transparent 45%);
+}
+
+.panel-shell {
+  background: linear-gradient(to bottom, var(--bg-elev-hover), var(--panel));
+}
+
+/* Light mode: the CTA pill inverts so the spinning ring still reads. */
+[data-theme="light"] {
+  --btn-bg: #ffffff;
+  --btn-face: linear-gradient(135deg, #ffffff, #f2f2ee);
+}
+
+[data-theme="light"] .hero-primary-btn {
+  color: #0b0b0b;
+}
+
+[data-theme="light"] .noise-overlay {
+  mix-blend-mode: multiply;
+  opacity: 0.1;
+}
+
+[data-theme="light"] .agency-grain {
+  opacity: 0.02;
+}
+
+/* Nav pill and CTA: readable against either ground. */
+.nav-pill {
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+}
+
+.nav-pill-scrolled {
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+}
+
+.nav-cta {
+  background: linear-gradient(to bottom, #27272a, #000);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.nav-cta:hover {
+  box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.25);
+}
+
+.nav-cta .lucide {
+  color: var(--accent);
+}
+
+[data-theme="light"] .nav-cta {
+  background: linear-gradient(to bottom, #1a1a1a, #000);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.hindi {
+  font-family: var(--font-hindi), sans-serif;
+}
+
+/* ---- Font pairings ----
+   --font-display drives the bold headline lead and section titles.
+   --font-script drives the accent line. Body text stays Geist throughout
+   so the comparison isolates the display voice. */
+
+:root,
+[data-font="original"] {
+  --font-display: var(--font-geist-sans);
+  --font-script: var(--font-pinyon);
+  --script-size: 1.1em;
+  --script-style: normal;
+}
+
+/* 1. Editorial — serif italic accent, the magazine look. */
+[data-font="editorial"] {
+  --font-display: var(--f-instrument-sans), var(--font-geist-sans);
+  --font-script: var(--f-instrument-serif);
+  --script-size: 1.05em;
+  --script-style: italic;
+}
+
+/* 2. Literary — high-contrast Didone, closest to a printed book. */
+[data-font="literary"] {
+  --font-display: var(--f-fraunces), Georgia, serif;
+  --font-script: var(--f-playfair);
+  --script-size: 0.95em;
+  --script-style: italic;
+}
+
+/* 3. Handwritten — informal, closest in spirit to a pen. */
+[data-font="handwritten"] {
+  --font-display: var(--f-bricolage), var(--font-geist-sans);
+  --font-script: var(--f-caveat);
+  --script-size: 1.15em;
+  --script-style: normal;
+}
+
+/* 4. Modern — geometric sans with a heavy display serif accent. */
+[data-font="modern"] {
+  --font-display: var(--f-sora), var(--font-geist-sans);
+  --font-script: var(--f-gloock);
+  --script-size: 0.88em;
+  --script-style: normal;
+}
+
+/* 5. Grotesque — one family throughout, accent italic only. */
+[data-font="grotesque"] {
+  --font-display: var(--f-bricolage), var(--font-geist-sans);
+  --font-script: var(--f-instrument-serif);
+  --script-size: 1.05em;
+  --script-style: italic;
+}
+
+/* The accent span reads these; `.luxury-script` is the existing hook. */
+.luxury-script {
+  font-family: var(--font-script), "Pinyon Script", serif;
+  font-size: var(--script-size, 1.1em);
+  font-style: var(--script-style, normal);
+}
+
+/* Acronyms stay in the display face: calligraphic capitals collide into an
+   unreadable ligature at these sizes (notably "AI" in Pinyon Script). */
+.luxury-script .acronym {
+  /* Serif italic keeps the acronym inside the line's voice while its
+     separated capitals stay legible where a calligraphic face collides. */
+  font-family: var(--f-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.92em;
+  letter-spacing: 0.04em;
+  font-feature-settings: "liga" 0, "dlig" 0, "clig" 0, "calt" 0;
+  padding-inline: 0.04em;
+}
+
+h1,
+h2 {
+  font-family: var(--font-display), var(--font-geist-sans), sans-serif;
+}
