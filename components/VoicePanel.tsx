@@ -110,7 +110,7 @@ export default function VoicePanel() {
         </div>
 
         <div className="px-5 pb-5">
-          <div className="min-h-[130px] rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-5">
+          <div className="min-h-[148px] rounded-2xl border border-[var(--border)] bg-[var(--bg-elev)] p-5 sm:min-h-[130px]">
             {phase === "thinking" ? (
               <div className="flex h-full min-h-[90px] items-center justify-center gap-3 text-[var(--fg-dim)]">
                 <span className="flex gap-1">

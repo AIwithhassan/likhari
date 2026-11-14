@@ -115,8 +115,8 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 hero-tint" />
         <div className="relative mx-auto max-w-3xl text-center">
           <h2 className="text-4xl font-normal leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-            From talking
-            <span className="luxury-script ml-3 text-[var(--accent)]">to written</span>
+            From talking{" "}
+            <span className="luxury-script whitespace-nowrap text-[var(--accent)]">to written</span>
           </h2>
           <p className="mx-auto mt-6 max-w-lg text-lg font-light text-[var(--fg-muted)]">
             Join the people who stopped typing their first drafts.

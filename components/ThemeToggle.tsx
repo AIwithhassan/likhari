@@ -62,7 +62,7 @@ export default function ThemeToggle() {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-11 z-20 w-40 rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-2 backdrop-blur-xl">
+          <div className="popover-surface absolute right-0 top-11 z-20 w-40 rounded-2xl border border-[var(--border)] p-2">
             {PALETTES.map((p) => (
               <button
                 key={p.id}

@@ -22,9 +22,12 @@ export function SectionHeading({
       <h2 className="mt-5 text-4xl font-normal leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
         {title}
         {accent && (
-          <span className="luxury-script ml-3 whitespace-nowrap text-[1.1em] font-normal lowercase text-[var(--accent)]">
-            {accent}
-          </span>
+          <>
+            {" "}
+            <span className="luxury-script whitespace-nowrap text-[1.1em] font-normal lowercase text-[var(--accent)]">
+              {accent}
+            </span>
+          </>
         )}
       </h2>
       {sub && <p className="mt-6 text-lg font-light leading-relaxed text-[var(--fg-muted)]">{sub}</p>}
@@ -155,7 +158,7 @@ export function Pricing() {
       {PLANS.map((p) => (
         <div
           key={p.name}
-          className={`group relative overflow-hidden rounded-3xl border p-8 transition-all duration-700 ${
+          className={`group relative overflow-hidden rounded-3xl border p-8 transition-all duration-700 md:last:col-span-2 md:last:mx-auto md:last:w-[calc(50%-0.75rem)] lg:last:col-span-1 lg:last:w-auto ${
             p.featured
               ? "border-[var(--accent)]/40 bg-gradient-to-b from-[var(--accent)]/[0.08] to-transparent"
               : "border-[var(--border)] bg-[var(--bg-elev)]"
